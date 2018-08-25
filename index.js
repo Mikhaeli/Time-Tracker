@@ -1,4 +1,4 @@
-const crud = ('./crud.js');
+const crud = require('./crud.js');
 
 const fs = require('fs');
 
@@ -8,7 +8,8 @@ const chalk = require('chalk');
 
 // Eaxample day
 // {"day":"test","activites":{"programming":3,"reading":2}}
-
+// Example call
+// node index.js create --day="cur" --activity="reading" --duration="3"
 var curDay = (argv.day === 'cur' || argv.day === 'current' || argv.day === undefined) ? date.format(new Date(), 'ddd MMM DD YYYY') : argv.day;
 var activity = argv.activity;
 var duration = argv.duration;
@@ -40,32 +41,17 @@ function Log(day, activity, duration) {
 }
 
 if (command === 'create') {
-  var diary = readDiary();
-  if (diary.filter(entry => entry.day === curDay).length) {
-    console.log('Day already exists')
-  } else if (curDay && activity && duration) {
-    diary.push(new Log(curDay, activity, duration));
-    writeDiary(diary);
-  }
-  // console.log(new Log(curDay, activity, duration));
+  crud.create(curDay, activity, duration);
+}
 
-}
 if (command === 'read') {
-  var diary = readDiary();
-  for (var x of diary) {
-    console.log(x);
-  }
-  //if day specifed, read day
-  //if day not specified, console.log all days
+  crud.read();
 }
+
 if (command === 'update') {
-  var diary = readDiary();
-  if (diary.filter(entry => entry.day === curDay).length) {
-    var dayIndex = objIndex(diary, 'day', curDay);
-    diary[dayIndex].activites[activity] = diary[dayIndex].activites[activity]? diary[dayIndex].activites[activity] + duration : duration;
-    writeDiary(diary);
-  }
+  crud.update(curDay, activity, duration);
 }
+
 if (command === 'delete') {
 
 }
@@ -74,7 +60,7 @@ if (command === 'delete') {
 
 
 
-console.log('');
-console.log(chalk.blue(command));
-console.log(chalk.blue(curDay));
-console.log(chalk.blue(argv));
+// console.log('');
+// console.log(chalk.blue(command));
+// console.log(chalk.blue(curDay));
+// console.log(chalk.blue(argv));
